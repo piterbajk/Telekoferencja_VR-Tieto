@@ -1,0 +1,1 @@
+Stworzenie appki - na razie odbierajacej zwykly stream
