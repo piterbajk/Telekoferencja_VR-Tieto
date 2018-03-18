@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 public class video_viewer extends Activity{
@@ -34,6 +35,9 @@ public class video_viewer extends Activity{
 
     private void playVideo(String ofLeftUrl /*,String ofRightUrl*/)
     {
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoViewerLeft);
+        videoViewerLeft.setMediaController(mediaController);
         videoViewerLeft.setVideoURI(Uri.parse(ofLeftUrl));
         //videoViewerRight.setVideoURI(Uri.parse(ofRightUrl));
         videoViewerLeft.start();
