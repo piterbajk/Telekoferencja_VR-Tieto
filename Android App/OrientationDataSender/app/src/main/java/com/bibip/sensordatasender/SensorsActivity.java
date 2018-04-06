@@ -6,9 +6,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -27,6 +27,9 @@ public class SensorsActivity extends Activity implements SensorEventListener {
     TextView roll;
     TextView pitch;
     TextView azimuth;
+    EditText edIP;
+    EditText edPORT;
+    CheckBox cbSEND;
 
     private final float[] mAccelerometerReading = new float[3];
     private final float[] mMagnetometerReading = new float[3];
@@ -39,6 +42,10 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensors);
 
+        edIP = (EditText) findViewById(R.id.editTextIP);
+        edPORT =(EditText) findViewById(R.id.editTextPORT);
+        cbSEND=(CheckBox) findViewById(R.id.checkBoxSend);
+
         roll = (TextView) findViewById(R.id.rollText);
         pitch = (TextView) findViewById(R.id.pitchText);
         azimuth = (TextView) findViewById(R.id.azimuthText);
@@ -48,7 +55,6 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         magnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 
-        sendOrientation();
     }
 
     @Override
@@ -70,8 +76,7 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             System.arraycopy(event.values, 0, mAccelerometerReading,
                     0, mAccelerometerReading.length);
-        }
-        else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+        } else if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
             System.arraycopy(event.values, 0, mMagnetometerReading,
                     0, mMagnetometerReading.length);
         }
@@ -79,24 +84,61 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         //updateText();
     }
 
-    public void  updateOrientationAngles() {
+    public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
         updateText();
     }
 
     public void updateText() {
-        roll.setText("Roll: " + (int) (mOrientationAngles[2] * RADIANTODEGREES));
-        pitch.setText("Pitch: " + (int) (mOrientationAngles[1] * RADIANTODEGREES));
-        azimuth.setText("Azymut: " + (int) (mOrientationAngles[0] * RADIANTODEGREES));
+        roll.setText("Roll: " + (mOrientationAngles[2] + 3.14));
+        pitch.setText("Pitch: " +  (mOrientationAngles[1] + 3.14));
+        azimuth.setText("Azymut: " + (mOrientationAngles[0] + 3.14));
+        if(cbSEND.isChecked())
+            sendMessage("Azymut: " + mOrientationAngles[0] + 3.14 + " Roll: " + (mOrientationAngles[2] + 3.14)+ " Pitch: " +  (mOrientationAngles[1] + 3.14));
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) { }
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
 
-    private void sendOrientation() {
-
+    private void sendMessage(final String message) {
+        //final Handler handler = new Handler();
         Thread thread = new Thread(new Runnable() {
+            //String stringData;
+            @Override
+            public void run() {
+                DatagramSocket ds = null;
+                try {
+                    ds = new DatagramSocket();
+                    // IP Address below is the IP address of that Device where server socket is opened.
+                    InetAddress serverAddr = InetAddress.getByName(edIP.getText().toString());
+                    DatagramPacket dp;
+                    dp = new DatagramPacket(message.getBytes(), message.length(), serverAddr, Integer.parseInt(edPORT.getText().toString()));
+                    ds.send(dp);
+
+                    byte[] lMsg = new byte[1000];
+                    dp = new DatagramPacket(lMsg, lMsg.length);
+                    ds.receive(dp);
+                    //stringData = new String(lMsg, 0, dp.getLength());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (ds != null) {
+                        ds.close();
+                    }
+                }
+            }
+        });
+        thread.start();
+
+    }
+}
+
+     /* private void sendOrientation() {
+
+      Thread thread = new Thread(new Runnable() {
 
             private String stringData = null;
 
@@ -128,5 +170,5 @@ public class SensorsActivity extends Activity implements SensorEventListener {
         });
         thread.start();
     }
+}*/
 
-}
