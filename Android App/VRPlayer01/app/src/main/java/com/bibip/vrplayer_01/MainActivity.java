@@ -36,7 +36,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 
         videoViewerIntent = new Intent(this, video_viewer.class);
-        videoViewerIntent.putExtra("leftUrl",leftUrl.getText().toString());
+
 
         playButton.setOnClickListener(this);
     }
@@ -45,6 +45,7 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View v){
         switch (v.getId()){
             case R.id.playButton:
+                videoViewerIntent.putExtra("leftUrl",leftUrl.getText().toString());
                 startActivity(videoViewerIntent);
                 break;
         }
