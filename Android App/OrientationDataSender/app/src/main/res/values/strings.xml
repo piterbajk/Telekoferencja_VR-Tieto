@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">SensorDataSender</string>
-    <string name="start">Start</string>
+    <string name="start">OrientationActivity</string>
 </resources>
