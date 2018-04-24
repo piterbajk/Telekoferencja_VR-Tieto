@@ -6,11 +6,16 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 
+import android.media.AudioManager;
 import android.net.rtp.AudioCodec;
 import android.net.rtp.AudioGroup;
 import android.net.rtp.AudioStream;
 import android.net.rtp.RtpStream;
 import android.util.Log;
+
+
+
+//               NIE UZYWANE ALE MOZE SIE JESZCZE PRZYDAC JAKBY TAMTEN SPOSOB PRZESYLANIA DZWIEKU ZAWIODŁ!!!!!!!!!!!!!!!!!!!!!!!
 
 /**
  * Encapsulation of the rtp package from API 12
@@ -27,16 +32,27 @@ public class GenericAudioStream {
 
     public GenericAudioStream() {
         try {
+            Log.d("mama","czesc1");
+            //AudioManager AM =new AudioManager();
             audioGroup = new AudioGroup();
+
+            Log.d("mama","czesc2");
             audioGroup.setMode(AudioGroup.MODE_NORMAL);
+            audioStream.join(audioGroup);
+            Log.d("mama","czesc3");
             audioStream = new AudioStream(InetAddress.getLocalHost());
+            Log.d("mama","czesc4");
             audioStream.setCodec(AudioCodec.AMR);
+            Log.d("mama","czesc5");
             audioStream.setMode(RtpStream.MODE_SEND_ONLY);
+            Log.d("mama","czesc6");
         } catch (SocketException e) {
             // TODO Auto-generated catch block
+            Log.d("mama",e.getMessage());
             e.printStackTrace();
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
+            Log.d("mama",e.getMessage());
             e.printStackTrace();
         }
     }
