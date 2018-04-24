@@ -1,0 +1,3 @@
+H:/Telekoferencja_VR-Tieto/Android App/OrientationDataSender/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/native-lib.dir
+H:/Telekoferencja_VR-Tieto/Android App/OrientationDataSender/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/edit_cache.dir
+H:/Telekoferencja_VR-Tieto/Android App/OrientationDataSender/app/.externalNativeBuild/cmake/release/x86_64/CMakeFiles/rebuild_cache.dir

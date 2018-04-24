@@ -1,0 +1,123 @@
+-- Merging decision tree log ---
+manifest
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\2fbf4e863b9d38b20f41f92f0917d22e\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\36b1991d45aeb5c898ad24479e7a5aa9\AndroidManifest.xml:2:1-11:12
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\84c569186b95f5ad77848c720916da8c\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\91506d4d2406866741eab3319c4166dd\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\5cbcac89c7b621ec5a2d9179491cc0c9\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\46fbf6579f454b8e64a608246cdf7709\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\794bf8a7183d8363ea1d380dca91dc16\AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\a277d46730bec91aa214b499101588fa\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3d963b7a248c8237afc46139e6f212e8\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fc0a54c84a80881e34f99d1afeb9c0a1\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\3c5e211bb7be69c2c74a9aa66f0527d0\AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\2c4e941861cab921c50b8eea86cd0127\AndroidManifest.xml:17:1-22:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+	package
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:3:5-41
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:1-26:12
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:5:5-78
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:5:22-76
+uses-permission#android.permission.INTERNET
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:6:5-66
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:6:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:7:5-78
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:7:22-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:8:5-75
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:8:22-73
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:9:5-71
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:9:22-68
+application
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:10:5-24:19
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\36b1991d45aeb5c898ad24479e7a5aa9\AndroidManifest.xml:9:5-20
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\36b1991d45aeb5c898ad24479e7a5aa9\AndroidManifest.xml:9:5-20
+	android:supportsRtl
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:15:9-35
+	android:label
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:13:9-41
+	android:roundIcon
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:14:9-54
+	android:icon
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:12:9-43
+	android:allowBackup
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:11:9-35
+	android:theme
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:16:9-40
+activity#com.bibip.sensordatasender.MainActivity
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:17:9-23:20
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:18:13-41
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:19:13-22:29
+action#android.intent.action.MAIN
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:20:17-69
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:20:25-66
+category#android.intent.category.LAUNCHER
+ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:21:17-77
+	android:name
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml:21:27-74
+uses-sdk
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\2fbf4e863b9d38b20f41f92f0917d22e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:appcompat-v7:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\appcompat-v7-27.1.1.aar\2fbf4e863b9d38b20f41f92f0917d22e\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\36b1991d45aeb5c898ad24479e7a5aa9\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support.constraint:constraint-layout:1.0.2] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.0.2.aar\36b1991d45aeb5c898ad24479e7a5aa9\AndroidManifest.xml:5:5-7:41
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\84c569186b95f5ad77848c720916da8c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-fragment-27.1.1.aar\84c569186b95f5ad77848c720916da8c\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\91506d4d2406866741eab3319c4166dd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:animated-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-27.1.1.aar\91506d4d2406866741eab3319c4166dd\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\5cbcac89c7b621ec5a2d9179491cc0c9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-ui-27.1.1.aar\5cbcac89c7b621ec5a2d9179491cc0c9\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\46fbf6579f454b8e64a608246cdf7709\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-core-utils-27.1.1.aar\46fbf6579f454b8e64a608246cdf7709\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\794bf8a7183d8363ea1d380dca91dc16\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-27.1.1.aar\794bf8a7183d8363ea1d380dca91dc16\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\a277d46730bec91aa214b499101588fa\AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\support-compat-27.1.1.aar\a277d46730bec91aa214b499101588fa\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3d963b7a248c8237afc46139e6f212e8\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\livedata-core-1.1.0.aar\3d963b7a248c8237afc46139e6f212e8\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fc0a54c84a80881e34f99d1afeb9c0a1\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\viewmodel-1.1.0.aar\fc0a54c84a80881e34f99d1afeb9c0a1\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\3c5e211bb7be69c2c74a9aa66f0527d0\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\3c5e211bb7be69c2c74a9aa66f0527d0\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\2c4e941861cab921c50b8eea86cd0127\AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] C:\Users\Szymon\.gradle\caches\transforms-1\files-1.1\runtime-1.1.0.aar\2c4e941861cab921c50b8eea86cd0127\AndroidManifest.xml:20:5-44
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		ADDED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
+		INJECTED from H:\Telekoferencja_VR-Tieto\Android App\OrientationDataSender\app\src\main\AndroidManifest.xml
