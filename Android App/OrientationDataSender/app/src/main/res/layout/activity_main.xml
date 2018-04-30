@@ -48,6 +48,12 @@
             android:singleLine="true"
             android:text="@string/IP" />
 
+        <Button
+            android:id="@+id/buttonCalibrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calibrate" />
+
         <TextView
             android:id="@+id/textViewShowOrientation"
             android:layout_width="match_parent"

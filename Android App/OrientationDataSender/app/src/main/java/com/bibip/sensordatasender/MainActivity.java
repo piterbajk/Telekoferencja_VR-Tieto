@@ -43,6 +43,15 @@ public class MainActivity extends Activity implements SensorEventListener {
     private final float[] mMagnetometerReading = new float[3];
     private final float[] mRotationMatrix = new float[9];
     private final float[] mOrientationAngles = new float[3];
+
+    private float CalibratedRollValue = 0;
+    private float CalibratedPitchValue = 0;
+    private float CalibratedYawValue = 0;
+    private float RollValue = 0;
+    private float PitchValue = 0;
+    private float YawValue = 0;
+
+
     private SensorManager sensorManager;
     Sensor accelerometer;
     Sensor magnetometer;
@@ -55,6 +64,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     private boolean statusSending = false;
 
     Button startThreadButton;
+    Button calibrateSensorsButton;
     CheckBox checkBoxAudio;
     CheckBox checkBoxOrientation;
     EditText editTextIP;
@@ -94,6 +104,14 @@ public class MainActivity extends Activity implements SensorEventListener {
             });
             editTextIP = (EditText) findViewById(R.id.EditTextAudioIP);
             textViewOrientation = (TextView) findViewById(R.id.textViewShowOrientation);
+
+            calibrateSensorsButton = (Button) findViewById(R.id.buttonCalibrate);
+            calibrateSensorsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    performCalibration();
+                }
+            });
 
             sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -192,10 +210,25 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
+    public void performCalibration(){
+        SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
+        SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
+
+        CalibratedRollValue = (int)Math.toDegrees(mOrientationAngles[1]);
+        CalibratedPitchValue = (int)Math.toDegrees(mOrientationAngles[2]);
+        CalibratedYawValue = (int)Math.toDegrees(mOrientationAngles[0]);
+    }
+
     public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
-        textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
+
+        RollValue = (int) (Math.toDegrees(mOrientationAngles[1])) - CalibratedRollValue;
+        PitchValue = (int) (Math.toDegrees(mOrientationAngles[2])) - CalibratedPitchValue;
+        YawValue = (int) (Math.toDegrees(mOrientationAngles[0])) - CalibratedYawValue;
+
+        //textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
+        textViewOrientation.setText("R: " + RollValue + " P: " + PitchValue + " Y: " + YawValue);
     }
 
     private void startStreamingOrientation() {
@@ -207,8 +240,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                     InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
                     ds = new DatagramSocket();
                         while(checkBoxOrientation.isChecked()) {
-                            String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
-                            // IP Address below is the IP address of that Device where server socket is opened.
+                            //String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
+                            String data = ("R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);
                             DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                             ds.send(dp);
                             Thread.sleep(100);
