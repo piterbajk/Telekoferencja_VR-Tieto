@@ -126,6 +126,12 @@ public class MainActivity extends Activity implements SensorEventListener {
                             //putting buffer in the packet
                             packet = new DatagramPacket(buffer, buffer.length, destination, SendAudioPORT);
                             socket.send(packet);
+
+                            String data = (" ");//separator
+                            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), destination, SendAudioPORT);
+                            socket.send(dp);
+
+
                             Log.d("AudioSending","MinBufferSize: " + minBufSize);
                         }
                         recorder.release();
@@ -189,7 +195,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
-        textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
+        textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
     }
 
     private void startStreamingOrientation() {
@@ -198,13 +204,12 @@ public class MainActivity extends Activity implements SensorEventListener {
             public void run() {
                 DatagramSocket ds = null;
                 try {
+                    InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
+                    ds = new DatagramSocket();
                         while(checkBoxOrientation.isChecked()) {
-                            String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
-                            ds = new DatagramSocket();
+                            String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
                             // IP Address below is the IP address of that Device where server socket is opened.
-                            InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
-                            DatagramPacket dp;
-                            dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
+                            DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                             ds.send(dp);
                             Thread.sleep(100);
                             Log.d("OrientationSending", data);
