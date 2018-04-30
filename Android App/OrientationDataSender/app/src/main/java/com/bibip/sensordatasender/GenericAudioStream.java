@@ -87,7 +87,7 @@ public class GenericAudioStream {
     }
 
     public void setTimeToLive(int ttl) {
-        // FIXME: is it possible to change the TTL here ?
+        ;
     }
 
     public void setDestination(InetAddress dest, int dport) {

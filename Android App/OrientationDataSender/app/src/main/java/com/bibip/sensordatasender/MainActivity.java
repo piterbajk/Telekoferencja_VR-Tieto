@@ -189,7 +189,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
-        textViewOrientation.setText(((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))) + "\n" + ((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + ((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))));
+        textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
     }
 
     private void startStreamingOrientation() {
@@ -199,7 +199,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                 DatagramSocket ds = null;
                 try {
                         while(checkBoxOrientation.isChecked()) {
-                            String data = ("Azymut: " + mOrientationAngles[0] + Math.PI + " Roll: " + (mOrientationAngles[2] + Math.PI)+ " Pitch: " +  (mOrientationAngles[1] + Math.PI));
+                            String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
                             ds = new DatagramSocket();
                             // IP Address below is the IP address of that Device where server socket is opened.
                             InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
