@@ -40,7 +40,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     private int desired_position;         // Position where the users wants to seek to
     private String mediaUri;              // URI of the clip being played
 
-    private final String defaultMediaUri = "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.ogv";
+    private String defaultMediaUri;
 
     static private final int PICK_FILE_CODE = 1;
     private String last_folder;
@@ -53,7 +53,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     {
         super.onCreate(savedInstanceState);
 
-        mediaUri = getIntent().getStringExtra("VideoURL");
+        defaultMediaUri = getIntent().getStringExtra("VideoURL");
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);

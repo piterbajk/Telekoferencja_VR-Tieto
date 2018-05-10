@@ -135,7 +135,9 @@ static gboolean refresh_ui (CustomData *data) {
     /* If we didn't know it yet, query the stream duration */
     if (!GST_CLOCK_TIME_IS_VALID (data->duration)) {
         if (!gst_element_query_duration (data->pipeline, GST_FORMAT_TIME, &data->duration)) {
-            GST_WARNING ("Could not query current duration (normal for still pictures)");
+            GST_WARNING ("Could not query current duration (nor"
+                                 ""
+                                 "mal for still pictures)");
             data->duration = 0;
         }
     }
