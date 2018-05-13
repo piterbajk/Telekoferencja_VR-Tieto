@@ -227,24 +227,7 @@ static void duration_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
 
 /* Called when buffering messages are received. We inform the UI about the current buffering level and
  * keep the pipeline paused until 100% buffering is reached. At that point, set the desired state. */
-static void buffering_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
-    gint percent;
-
-    if (data->is_live)
-        return;
-
-    gst_message_parse_buffering (msg, &percent);
-    if (percent < 100 && data->target_state >= GST_STATE_PAUSED) {
-        gchar * message_string = g_strdup_printf ("Buffering %d%%", percent);
-        gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
-        set_ui_message (message_string, data);
-        g_free (message_string);
-    } else if (data->target_state >= GST_STATE_PLAYING) {
-        gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
-    } else if (data->target_state >= GST_STATE_PAUSED) {
-        set_ui_message ("Buffering complete", data);
-    }
-}
+static void buffering_cb (GstBus *bus, GstMessage *msg, CustomData *data) { }
 
 /* Called when the clock is lost */
 static void clock_lost_cb (GstBus *bus, GstMessage *msg, CustomData *data) {
