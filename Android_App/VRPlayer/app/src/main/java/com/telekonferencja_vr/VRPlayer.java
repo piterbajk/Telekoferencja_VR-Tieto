@@ -110,8 +110,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
             Log.i ("GStreamer", "Activity created with no saved state:");
         }
         is_local_media = false;
-        Log.i ("GStreamer", "  playing:" + is_playing_desired + " position:" + position +
-                " duration: " + duration + " uri: " + mediaUri);
+        Log.i ("GStreamer", "  playing:" + is_playing_desired);
 
         nativeInit();
 
