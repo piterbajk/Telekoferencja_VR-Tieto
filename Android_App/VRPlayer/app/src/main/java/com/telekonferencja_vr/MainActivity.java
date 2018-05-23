@@ -12,9 +12,11 @@ import android.hardware.SensorManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 //import android.support.annotation.NonNull;
 //import android.support.v4.app.ActivityCompat;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +29,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
+
+import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity implements SensorEventListener {
     //==============================Audio Coonfiguration==============================
@@ -51,6 +58,14 @@ public class MainActivity extends Activity implements SensorEventListener {
     private float RollValue = 0;
     private float PitchValue = 0;
     private float YawValue = 0;
+
+    private float LastRollValue = 0;
+    private float LastPitchValue = 0;
+    private float LastYawValue = 0;
+
+    private int RollRotate = 0;
+    private int PitchRotate = 0;
+    private int YawlRotate = 0;
 
 
     private SensorManager sensorManager;
@@ -234,18 +249,75 @@ public class MainActivity extends Activity implements SensorEventListener {
         CalibratedRollValue = (int)Math.toDegrees(mOrientationAngles[1]);
         CalibratedPitchValue = (int)Math.toDegrees(mOrientationAngles[2]);
         CalibratedYawValue = (int)Math.toDegrees(mOrientationAngles[0]);
+        RollRotate = 0;
+        PitchRotate = 0;
+        YawlRotate = 0;
     }
 
     public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
 
-        RollValue = (int) (Math.toDegrees(mOrientationAngles[1])) - CalibratedRollValue;
-        PitchValue = (int) (Math.toDegrees(mOrientationAngles[2])) - CalibratedPitchValue;
-        YawValue = (int) (Math.toDegrees(mOrientationAngles[0])) - CalibratedYawValue;
+
+        LastRollValue = RollValue;
+        LastPitchValue = PitchValue;
+        LastYawValue = YawValue;
+
+        RollValue = (int) ((Math.toDegrees(mOrientationAngles[1])) - CalibratedRollValue)+(RollRotate*360);
+        PitchValue = (int) ((Math.toDegrees(mOrientationAngles[2])) - CalibratedPitchValue)+(PitchRotate*360);
+        YawValue = (int) ((Math.toDegrees(mOrientationAngles[0])) - CalibratedYawValue)+(YawlRotate*360);
+
+        Log.d("LastRollValue: ", String.valueOf(LastRollValue));
+        Log.d("RollValue: ", String.valueOf(RollValue));
+
+        Log.d("LastPitchValue:", String.valueOf(LastPitchValue));
+        Log.d("PitchValue:", String.valueOf(PitchValue));
+
+        Log.d("LastYawValue:", String.valueOf(LastYawValue));
+        Log.d("YawValue:", String.valueOf(YawValue));
+
+
+        if(RollValue - LastRollValue < -180)
+            ++RollRotate;
+        else if(RollValue - LastRollValue > 180)
+            --RollRotate;
+
+        if(PitchValue - LastPitchValue < -180)
+            ++PitchRotate;
+        else if(PitchValue - LastPitchValue > 180)
+            --PitchRotate;
+
+        if(YawValue - LastYawValue < -180)
+            ++YawlRotate;
+        else if(YawValue - LastYawValue > 180)
+            --YawlRotate;
+
+        RollValue = (int) ((Math.toDegrees(mOrientationAngles[1])) - CalibratedRollValue)+(RollRotate*360);
+        PitchValue = (int) ((Math.toDegrees(mOrientationAngles[2])) - CalibratedPitchValue)+(PitchRotate*360);
+        YawValue = (int) ((Math.toDegrees(mOrientationAngles[0])) - CalibratedYawValue)+(YawlRotate*360);
+
 
         //textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
         textViewOrientation.setText("R: " + RollValue + " P: " + PitchValue + " Y: " + YawValue);
+    }
+
+    public String getLocalIpAddress() {
+        try {
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
+                NetworkInterface intf = en.nextElement();
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
+                        Log.i(TAG, "***** IP="+ ip);
+                        return ip;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Log.e(TAG, ex.toString());
+        }
+        return null;
     }
 
     private void startStreamingOrientation() {
@@ -256,12 +328,13 @@ public class MainActivity extends Activity implements SensorEventListener {
                 try {
                     InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
                     ds = new DatagramSocket();
+                    String ip = getLocalIpAddress();
                     while(checkBoxOrientation.isChecked()) {
                         //String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
-                        String data = ("R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);
+                        String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue + ip);
                         DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                         ds.send(dp);
-                        Thread.sleep(100);
+                        Thread.sleep(5);
                         Log.d("OrientationSending", data);
                     }
                    /* byte[] lMsg = new byte[1000];
