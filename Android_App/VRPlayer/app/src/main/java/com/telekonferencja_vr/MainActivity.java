@@ -86,6 +86,7 @@ public class MainActivity extends Activity implements SensorEventListener {
     EditText editTextIP;
     TextView textViewOrientation;
     EditText videoURI;
+    EditText videoURI2;
     Button videoButton;
 
     //Intent sensorActivity;
@@ -102,11 +103,13 @@ public class MainActivity extends Activity implements SensorEventListener {
         videoViewer = new Intent(this, VRPlayer.class);
 
         videoURI = (EditText) findViewById(R.id.videoUrl);
+        videoURI2 = (EditText) findViewById(R.id.videoUrl2);
         videoButton = (Button) findViewById(R.id.videoStartButton);
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 videoViewer.putExtra("VideoURL", videoURI.getText().toString());
+                videoViewer.putExtra("VideoURL2", videoURI2.getText().toString());
                 startActivity(videoViewer);
             }
         });

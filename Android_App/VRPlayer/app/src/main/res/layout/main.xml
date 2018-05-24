@@ -10,14 +10,23 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dip"
         android:gravity="center_horizontal"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
+
+        <com.telekonferencja_vr.GStreamerSurfaceView
+            android:id="@+id/surface_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"/>
+
+        <com.telekonferencja_vr.GStreamerSurfaceView
+            android:id="@+id/surface_video2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:baselineAligned="false" />
 
     </LinearLayout>
-
-    <com.telekonferencja_vr.GStreamerSurfaceView
-        android:id="@+id/surface_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal" />
 
 </LinearLayout>

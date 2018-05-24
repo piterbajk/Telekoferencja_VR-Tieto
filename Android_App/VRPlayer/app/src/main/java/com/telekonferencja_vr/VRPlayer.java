@@ -20,16 +20,16 @@ import org.freedesktop.gstreamer.GStreamer;
 import com.telekonferencja_vr.GStreamerSurfaceView;
 
 
-public class VRPlayer extends Activity implements SurfaceHolder.Callback {
+public class VRPlayer extends Activity {
 
     private native void nativeInit();     // Initialize native code, build pipeline, etc
     private native void nativeFinalize(); // Destroy pipeline and shutdown native code
-    private native void nativeSetUri(String uri); // Set the URI of the media to play
+    private native void nativeSetUri(String uri, String uri2); // Set the URI of the media to play
     private native void nativePlay();     // Set pipeline to PLAYING
     private native void nativeSetPosition(int milliseconds); // Seek to the indicated position, in milliseconds
     private native void nativePause();    // Set pipeline to PAUSED
     private static native boolean nativeClassInit(); // Initialize native class: cache Method IDs for callbacks
-    private native void nativeSurfaceInit(Object surface); // A new surface is available
+    private native void nativeSurfaceInit(Object surface, Object surface2); // A new surface is available
     private native void nativeSurfaceFinalize(); // Surface about to be destroyed
     private long native_custom_data;      // Native code will use this to keep private data
 
@@ -39,8 +39,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     private boolean is_local_media;       // Whether this clip is stored locally or is being streamed
     private int desired_position;         // Position where the users wants to seek to
     private String mediaUri;              // URI of the clip being played
-
-    private String defaultMediaUri;
+    private String mediaUri2;
 
     static private final int PICK_FILE_CODE = 1;
     private String last_folder;
@@ -53,7 +52,8 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     {
         super.onCreate(savedInstanceState);
 
-        defaultMediaUri = getIntent().getStringExtra("VideoURL");
+        mediaUri = getIntent().getStringExtra("VideoURL");
+        mediaUri2 = getIntent().getStringExtra("VideoURL2");
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -78,8 +78,10 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
 
         SurfaceView sv = (SurfaceView) this.findViewById(R.id.surface_video);
-        SurfaceHolder sh = sv.getHolder();
-        sh.addCallback(this);
+        SurfaceView sv2 = (SurfaceView) this.findViewById(R.id.surface_video2);
+
+        nativeSurfaceInit (sv, sv2);
+
 
         // Retrieve our previous state, or initialize it to default values
         if (savedInstanceState != null) {
@@ -87,6 +89,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
             position = savedInstanceState.getInt("position");
             duration = savedInstanceState.getInt("duration");
             mediaUri = savedInstanceState.getString("mediaUri");
+            mediaUri2 = savedInstanceState.getString("mediaUri2");
             last_folder = savedInstanceState.getString("last_folder");
             Log.i ("GStreamer", "Activity created with saved state:");
         } else {
@@ -95,18 +98,6 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
             last_folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
             Intent intent = getIntent();
             android.net.Uri uri = intent.getData();
-            if (uri == null)
-                mediaUri = defaultMediaUri;
-            else {
-                Log.i ("GStreamer", "Received URI: " + uri);
-                if (uri.getScheme().equals("content")) {
-                    android.database.Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-                    cursor.moveToFirst();
-                    mediaUri = "file://" + cursor.getString(cursor.getColumnIndex(android.provider.MediaStore.Video.Media.DATA));
-                    cursor.close();
-                } else
-                    mediaUri = uri.toString();
-            }
             Log.i ("GStreamer", "Activity created with no saved state:");
         }
         is_local_media = false;
@@ -122,11 +113,12 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
     protected void onSaveInstanceState (Bundle outState) {
         Log.d ("GStreamer", "Saving state, playing:" + is_playing_desired + " position:" + position +
-                " duration: " + duration + " uri: " + mediaUri);
+                " duration: " + duration + " uri: " + mediaUri + " uri2: " + mediaUri2);
         outState.putBoolean("playing", is_playing_desired);
         outState.putInt("position", position);
         outState.putInt("duration", duration);
         outState.putString("mediaUri", mediaUri);
+        outState.putString("mediaUri2", mediaUri2);
         outState.putString("last_folder", last_folder);
     }
 
@@ -142,7 +134,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
     // Set the URI to play, and record whether it is a local or remote file
     private void setMediaUri() {
-        nativeSetUri (mediaUri);
+        nativeSetUri (mediaUri, mediaUri2);
         is_local_media = mediaUri.startsWith("file://");
     }
 
@@ -150,7 +142,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     // the main loop is running, so it is ready to accept commands.
     private void onGStreamerInitialized () {
         Log.i ("GStreamer", "GStreamer initialized:");
-        Log.i ("GStreamer", "  playing:" + is_playing_desired + " position:" + position + " uri: " + mediaUri);
+        Log.i ("GStreamer", "  playing:" + is_playing_desired + " position:" + position + " uri: " + mediaUri + " uri2: " + mediaUri2);
 
         // Restore previous playing state
         setMediaUri ();
@@ -174,25 +166,9 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
         nativeClassInit();
     }
 
-    public void surfaceChanged(SurfaceHolder holder, int format, int width,
-                               int height) {
-        Log.d("GStreamer", "Surface changed to format " + format + " width "
-                + width + " height " + height);
-        nativeSurfaceInit (holder.getSurface());
-    }
-
-    public void surfaceCreated(SurfaceHolder holder) {
-        Log.d("GStreamer", "Surface created: " + holder.getSurface());
-    }
-
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.d("GStreamer", "Surface destroyed");
-        nativeSurfaceFinalize ();
-    }
-
     // Called from native code when the size of the media changes or is first detected.
     // Inform the video surface about the new size and recalculate the layout.
-    private void onMediaSizeChanged (int width, int height) {
+    /*private void onMediaSizeChanged (int width, int height) {
         Log.i ("GStreamer", "Media size changed to " + width + "x" + height);
         final GStreamerSurfaceView gsv = (GStreamerSurfaceView) this.findViewById(R.id.surface_video);
         gsv.media_width = width;
@@ -202,7 +178,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
                 gsv.requestLayout();
             }
         });
-    }
+    }*/
 
 
     @Override

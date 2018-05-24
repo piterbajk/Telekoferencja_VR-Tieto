@@ -32,10 +32,12 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 typedef struct _CustomData {
     jobject app;                  /* Application instance, used to call its methods. A global reference is kept. */
     GstElement *pipeline;         /* The running pipeline */
+    GstElement *pipeline2;        /* The second running pipeline */
     GMainContext *context;        /* GLib context used to run the main loop */
     GMainLoop *main_loop;         /* GLib main loop */
     gboolean initialized;         /* To avoid informing the UI multiple times about the initialization */
     ANativeWindow *native_window; /* The Android native window where video will be rendered */
+    ANativeWindow *native_window2;/*Second window on which video will be rendered */
     GstState state;               /* Current pipeline state */
     GstState target_state;        /* Desired pipeline state, to be set once buffering is complete */
     gint64 duration;              /* Cached clip duration */
@@ -318,6 +320,7 @@ static void *app_function (void *userdata) {
     CustomData *data = (CustomData *)userdata;
     GSource *timeout_source;
     GSource *bus_source;
+    GSource *bus_source2; /**/
     GError *error = NULL;
     guint flags;
 
@@ -327,8 +330,9 @@ static void *app_function (void *userdata) {
     data->context = g_main_context_new ();
     g_main_context_push_thread_default(data->context);
 
-    /* Build pipeline */
+    /* Build pipelines */
         data->pipeline = gst_parse_launch("playbin uridecodebin0::source::latency=20", &error);
+        data->pipeline2 = gst_parse_launch("playbin uridecodebin0::source::latency=20", &error); /**/
     if (error) {
         gchar *message = g_strdup_printf("Unable to build pipeline: %s", error->message);
         g_clear_error (&error);
@@ -339,13 +343,17 @@ static void *app_function (void *userdata) {
 
     /* Disable subtitles */
     g_object_get (data->pipeline, "flags", &flags, NULL);
+    g_object_get (data->pipeline2, "flags", &flags, NULL); /**/
     flags &= ~GST_PLAY_FLAG_TEXT;
     g_object_set (data->pipeline, "flags", flags, NULL);
+    g_object_set (data->pipeline2, "flags", flags, NULL); /**/
 
     /* Set the pipeline to READY, so it can already accept a window handle, if we have one */
     data->target_state = GST_STATE_READY;
     gst_element_set_state(data->pipeline, GST_STATE_READY);
+    gst_element_set_state(data->pipeline2, GST_STATE_READY); /**/
 
+    /*KRZAK -- tutaj moze sie krzaczyc jakby co */
     /* Instruct the bus to emit signals for each received message, and connect to the interesting signals */
     bus = gst_element_get_bus (data->pipeline);
     bus_source = gst_bus_create_watch (bus);
@@ -359,6 +367,23 @@ static void *app_function (void *userdata) {
     g_signal_connect (G_OBJECT (bus), "message::buffering", (GCallback)buffering_cb, data);
     g_signal_connect (G_OBJECT (bus), "message::clock-lost", (GCallback)clock_lost_cb, data);
     gst_object_unref (bus);
+
+
+    //O TUTAJ
+    bus = gst_element_get_bus (data->pipeline2);
+    bus_source = gst_bus_create_watch (bus);
+    g_source_set_callback (bus_source, (GSourceFunc) gst_bus_async_signal_func, NULL, NULL);
+    g_source_attach (bus_source, data->context);
+    g_source_unref (bus_source);
+    g_signal_connect (G_OBJECT (bus), "message::error", (GCallback)error_cb, data);
+    g_signal_connect (G_OBJECT (bus), "message::eos", (GCallback)eos_cb, data);
+    g_signal_connect (G_OBJECT (bus), "message::state-changed", (GCallback)state_changed_cb, data);
+    g_signal_connect (G_OBJECT (bus), "message::duration", (GCallback)duration_cb, data);
+    g_signal_connect (G_OBJECT (bus), "message::buffering", (GCallback)buffering_cb, data);
+    g_signal_connect (G_OBJECT (bus), "message::clock-lost", (GCallback)clock_lost_cb, data);
+    gst_object_unref (bus);
+
+
 
     /* Register a function that GLib will call 4 times per second */
     timeout_source = g_timeout_source_new (250);
@@ -380,7 +405,9 @@ static void *app_function (void *userdata) {
     g_main_context_unref (data->context);
     data->target_state = GST_STATE_NULL;
     gst_element_set_state (data->pipeline, GST_STATE_NULL);
+    gst_element_set_state (data->pipeline2, GST_STATE_NULL);
     gst_object_unref (data->pipeline);
+    gst_object_unref (data->pipeline2);
 
     return NULL;
 }
@@ -420,15 +447,22 @@ static void gst_native_finalize (JNIEnv* env, jobject thiz) {
 }
 
 /* Set playbin2's URI */
-void gst_native_set_uri (JNIEnv* env, jobject thiz, jstring uri) {
+void gst_native_set_uri (JNIEnv* env, jobject thiz, jstring uri, jstring uri2) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
-    if (!data || !data->pipeline) return;
+    if (!data || (!data->pipeline)) return;
     const jbyte *char_uri = (*env)->GetStringUTFChars (env, uri, NULL);
+    const jbyte *char_uri2 = (*env)->GetStringUTFChars (env, uri2, NULL); /**/
     GST_DEBUG ("Setting URI to %s", char_uri);
+    GST_DEBUG ("Setting URI to %s", char_uri); /**/
     if (data->target_state >= GST_STATE_READY)
-        gst_element_set_state (data->pipeline, GST_STATE_READY);
+    {
+        gst_element_set_state(data->pipeline, GST_STATE_READY);
+        gst_element_set_state(data->pipeline2, GST_STATE_READY); /**/
+    }
     g_object_set(data->pipeline, "uri", char_uri, NULL);
+    g_object_set(data->pipeline2, "uri", char_uri, NULL); /**/
     (*env)->ReleaseStringUTFChars (env, uri, char_uri);
+    (*env)->ReleaseStringUTFChars (env, uri2, char_uri2); /**/
     data->duration = GST_CLOCK_TIME_NONE;
     data->is_live |= (gst_element_set_state (data->pipeline, data->target_state) == GST_STATE_CHANGE_NO_PREROLL);
 }
@@ -483,11 +517,13 @@ static jboolean gst_native_class_init (JNIEnv* env, jclass klass) {
     return JNI_TRUE;
 }
 
-static void gst_native_surface_init (JNIEnv *env, jobject thiz, jobject surface) {
+static void gst_native_surface_init (JNIEnv *env, jobject thiz, jobject surface, jobject surface2) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data) return;
     ANativeWindow *new_native_window = ANativeWindow_fromSurface(env, surface);
+    ANativeWindow *new_native_window2 = ANativeWindow_fromSurface(env, surface2); /**/
     GST_DEBUG ("Received surface %p (native window %p)", surface, new_native_window);
+    GST_DEBUG ("Received surface %p (native window %p)", surface2, new_native_window2); /**/
 
     if (data->native_window) {
         ANativeWindow_release (data->native_window);
@@ -505,6 +541,22 @@ static void gst_native_surface_init (JNIEnv *env, jobject thiz, jobject surface)
     }
     data->native_window = new_native_window;
 
+    if (data->native_window2) {
+        ANativeWindow_release (data->native_window2);
+        if (data->native_window2 == new_native_window2) {
+            GST_DEBUG ("New native window is the same as the previous one %p", data->native_window2);
+            if (data->pipeline2) {
+                gst_video_overlay_expose(GST_VIDEO_OVERLAY (data->pipeline2));
+                gst_video_overlay_expose(GST_VIDEO_OVERLAY (data->pipeline2));
+            }
+            return;
+        } else {
+            GST_DEBUG ("Released previous native window %p", data->native_window2);
+            data->initialized = FALSE;
+        }
+    }
+    data->native_window2 = new_native_window2;
+
     check_initialization_complete (data);
 }
 
@@ -512,14 +564,22 @@ static void gst_native_surface_finalize (JNIEnv *env, jobject thiz) {
     CustomData *data = GET_CUSTOM_DATA (env, thiz, custom_data_field_id);
     if (!data) return;
     GST_DEBUG ("Releasing Native Window %p", data->native_window);
+    GST_DEBUG ("Releasing Native Window %p", data->native_window2);
 
     if (data->pipeline) {
         gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (data->pipeline), (guintptr)NULL);
         gst_element_set_state (data->pipeline, GST_STATE_READY);
     }
 
+    if (data->pipeline2) {
+        gst_video_overlay_set_window_handle (GST_VIDEO_OVERLAY (data->pipeline2), (guintptr)NULL);
+        gst_element_set_state (data->pipeline2, GST_STATE_READY);
+    }
+
     ANativeWindow_release (data->native_window);
+    ANativeWindow_release (data->native_window2);
     data->native_window = NULL;
+    data->native_window2 = NULL;
     data->initialized = FALSE;
 }
 
