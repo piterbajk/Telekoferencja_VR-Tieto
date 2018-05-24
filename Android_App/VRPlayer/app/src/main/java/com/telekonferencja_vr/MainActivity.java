@@ -331,7 +331,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                     String ip = getLocalIpAddress();
                     while(checkBoxOrientation.isChecked()) {
                         //String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
-                        String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue + ip);
+                        String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);// + ip);
                         DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                         ds.send(dp);
                         Thread.sleep(5);
