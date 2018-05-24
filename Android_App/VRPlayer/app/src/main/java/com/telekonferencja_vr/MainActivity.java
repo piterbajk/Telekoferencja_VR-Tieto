@@ -249,10 +249,10 @@ public class MainActivity extends Activity implements SensorEventListener {
         CalibratedRollValue = (int)Math.toDegrees(mOrientationAngles[1]);
         CalibratedPitchValue = (int)Math.toDegrees(mOrientationAngles[2]);
         CalibratedYawValue = (int)Math.toDegrees(mOrientationAngles[0]);
-        RollRotate = 0;
-        PitchRotate = 0;
-        YawlRotate = 0;
-    }
+        LastRollValue = RollValue = 0;
+        LastPitchValue = PitchValue = 0;
+        LastYawValue = YawValue = 0;
+        }
 
     public void updateOrientationAngles() {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
