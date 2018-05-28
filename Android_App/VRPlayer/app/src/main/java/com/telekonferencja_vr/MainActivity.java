@@ -213,8 +213,8 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, magnetometer, sensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, magnetometer, sensorManager.SENSOR_DELAY_GAME);
 
     }
 
@@ -334,7 +334,7 @@ public class MainActivity extends Activity implements SensorEventListener {
                         String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);// + ip);
                         DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                         ds.send(dp);
-                        Thread.sleep(5);
+                        Thread.sleep(20);
                         Log.d("OrientationSending", data);
                     }
                    /* byte[] lMsg = new byte[1000];
