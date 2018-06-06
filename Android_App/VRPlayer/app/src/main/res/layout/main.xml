@@ -5,15 +5,6 @@
     android:gravity="center_vertical"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dip"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" >
-
-    </LinearLayout>
-
     <com.telekonferencja_vr.GStreamerSurfaceView
         android:id="@+id/surface_video"
         android:layout_width="wrap_content"
