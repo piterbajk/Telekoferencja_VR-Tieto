@@ -101,12 +101,16 @@ public class MainActivity extends Activity implements SensorEventListener {
 
         videoViewer = new Intent(this, VRPlayer.class);
 
-        videoURI = (EditText) findViewById(R.id.videoUrl);
+        editTextIP = (EditText) findViewById(R.id.EditTextAudioIP);
+        textViewOrientation = (TextView) findViewById(R.id.textViewShowOrientation);
+
+
         videoButton = (Button) findViewById(R.id.videoStartButton);
         videoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                videoViewer.putExtra("VideoURL", videoURI.getText().toString());
+               //rtsp://192.168.1.155:8554/test
+                videoViewer.putExtra("VideoURL", "rtsp://"+editTextIP.toString()+":8554/test");
                 startActivity(videoViewer);
             }
         });
@@ -115,8 +119,17 @@ public class MainActivity extends Activity implements SensorEventListener {
             checkBoxOrientation = (CheckBox) findViewById(R.id.checkBoxSendOrientation);
             checkBoxOrientation.setText("Send Orientation: " + SendOrientationPORT);
             checkBoxAudio.setText("Send Audio: " + SendAudioPORT);
-
-            startThreadButton = (Button) findViewById(R.id.buttonStart);
+            checkBoxAudio.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startStreamingAudio();
+                }});
+            checkBoxOrientation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startStreamingOrientation();
+                }});
+            /*startThreadButton = (Button) findViewById(R.id.buttonStart);
             startThreadButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -132,10 +145,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                         startThreadButton.setText("Start Threads");
                         statusSending = false;
                     }
-                }
-            });
-            editTextIP = (EditText) findViewById(R.id.EditTextAudioIP);
-            textViewOrientation = (TextView) findViewById(R.id.textViewShowOrientation);
+
+            });*/
 
             calibrateSensorsButton = (Button) findViewById(R.id.buttonCalibrate);
             calibrateSensorsButton.setOnClickListener(new View.OnClickListener() {
@@ -152,6 +163,8 @@ public class MainActivity extends Activity implements SensorEventListener {
             /*if(!ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.RECORD_AUDIO)) {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.RECORD_AUDIO},AUDIO_ACCES);
             }*/
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
         }
         catch (Exception e){
             Log.e("OnCreate",e.getMessage());
@@ -213,17 +226,16 @@ public class MainActivity extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-        sensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(this);
-        checkBoxAudio.setChecked(false);
-        checkBoxOrientation.setChecked(false);
+        //sensorManager.unregisterListener(this);
+        //checkBoxAudio.setChecked(false);
+        //checkBoxOrientation.setChecked(false);
     }
 
     @Override
@@ -301,25 +313,6 @@ public class MainActivity extends Activity implements SensorEventListener {
         textViewOrientation.setText("R: " + RollValue + " P: " + PitchValue + " Y: " + YawValue);
     }
 
-    public String getLocalIpAddress() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress()) {
-                        String ip = Formatter.formatIpAddress(inetAddress.hashCode());
-                        Log.i(TAG, "***** IP="+ ip);
-                        return ip;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Log.e(TAG, ex.toString());
-        }
-        return null;
-    }
-
     private void startStreamingOrientation() {
         Thread startSending = new Thread(new Runnable() {
             @Override
@@ -328,10 +321,8 @@ public class MainActivity extends Activity implements SensorEventListener {
                 try {
                     InetAddress serverAddr = InetAddress.getByName(editTextIP.getText().toString());
                     ds = new DatagramSocket();
-                    String ip = getLocalIpAddress();
                     while(checkBoxOrientation.isChecked()) {
-                        //String data = ("R: " + (int) Math.toDegrees(mOrientationAngles[1] +  Math.PI) + " P: " + (int) Math.toDegrees(mOrientationAngles[2] +  Math.PI)+ " Y: " +  (int) Math.toDegrees(mOrientationAngles[0] +  Math.PI));
-                        String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);// + ip);
+                         String data = (" R: " + RollValue + " " + " P: " + PitchValue + " Y: " + YawValue);
                         DatagramPacket dp = new DatagramPacket(data.getBytes(), data.length(), serverAddr, SendOrientationPORT);
                         ds.send(dp);
                         Thread.sleep(5);

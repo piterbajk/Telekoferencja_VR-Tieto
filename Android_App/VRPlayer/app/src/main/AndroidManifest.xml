@@ -23,7 +23,8 @@
 
     <application
         android:icon="@drawable/gstreamer_logo_5"
-        android:label="VRPlayer">
+        android:label="VRPlayer"
+        android:screenOrientation="landscape">
         <activity
             android:name=".VRPlayer"
             android:label="@string/app_name"
@@ -102,7 +103,9 @@
             android:label="@string/filechooser_name" >
         </activity
         -->
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
