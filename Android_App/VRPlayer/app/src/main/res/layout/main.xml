@@ -12,12 +12,33 @@
         android:gravity="center_horizontal"
         android:orientation="horizontal" >
 
+        <ImageButton
+            android:id="@+id/button_play"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_play" />
+
+        <ImageButton
+            android:id="@+id/button_stop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@android:drawable/ic_media_pause" />
+
+        <TextView
+            android:id="@+id/textview_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView" />
     </LinearLayout>
 
     <com.telekonferencja_vr.GStreamerSurfaceView
         android:id="@+id/surface_video"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal" />
+        android:layout_gravity="center_vertical|center_horizontal"
+        />
 
 </LinearLayout>

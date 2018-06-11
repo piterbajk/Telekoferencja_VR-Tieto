@@ -110,7 +110,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             @Override
             public void onClick(View view) {
                //rtsp://192.168.1.155:8554/test
-                videoViewer.putExtra("VideoURL", "rtsp://"+editTextIP.toString()+":8554/test");
+                //videoViewer.putExtra("VideoURL", "rtsp://"+editTextIP.toString()+":8554/test");
                 startActivity(videoViewer);
             }
         });
