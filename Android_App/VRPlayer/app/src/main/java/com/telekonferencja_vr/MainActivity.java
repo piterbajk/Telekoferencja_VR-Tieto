@@ -52,16 +52,16 @@ public class MainActivity extends Activity implements SensorEventListener {
     private final float[] mRotationMatrix = new float[9];
     private final float[] mOrientationAngles = new float[3];
 
-    private float CalibratedRollValue = 0;
-    private float CalibratedPitchValue = 0;
-    private float CalibratedYawValue = 0;
-    private float RollValue = 0;
-    private float PitchValue = 0;
-    private float YawValue = 0;
+    private double CalibratedRollValue = 0;
+    private double CalibratedPitchValue = 0;
+    private double CalibratedYawValue = 0;
+    private double RollValue = 0;
+    private double PitchValue = 0;
+    private double YawValue = 0;
 
-    private float LastRollValue = 0;
-    private float LastPitchValue = 0;
-    private float LastYawValue = 0;
+    private double LastRollValue = 0;
+    private double LastPitchValue = 0;
+    private double LastYawValue = 0;
 
     private int RollRotate = 0;
     private int PitchRotate = 0;
@@ -247,7 +247,7 @@ public class MainActivity extends Activity implements SensorEventListener {
             System.arraycopy(event.values, 0, mMagnetometerReading,
                     0, mMagnetometerReading.length);
         }
-        updateOrientationAngles();
+        updateOrientationAngles2();
     }
 
     @Override
@@ -258,9 +258,9 @@ public class MainActivity extends Activity implements SensorEventListener {
         SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
         SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
 
-        CalibratedRollValue = (int)Math.toDegrees(mOrientationAngles[1]);
-        CalibratedPitchValue = (int)Math.toDegrees(mOrientationAngles[2]);
-        CalibratedYawValue = (int)Math.toDegrees(mOrientationAngles[0]);
+        CalibratedRollValue = mOrientationAngles[1];
+        CalibratedPitchValue = mOrientationAngles[2];
+        CalibratedYawValue = mOrientationAngles[0];
         LastRollValue = RollValue = 0;
         LastPitchValue = PitchValue = 0;
         LastYawValue = YawValue = 0;
@@ -308,6 +308,42 @@ public class MainActivity extends Activity implements SensorEventListener {
         PitchValue = (int) ((Math.toDegrees(mOrientationAngles[2])) - CalibratedPitchValue)+(PitchRotate*360);
         YawValue = (int) ((Math.toDegrees(mOrientationAngles[0])) - CalibratedYawValue)+(YawlRotate*360);
 
+
+        //textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
+        textViewOrientation.setText("R: " + RollValue + " P: " + PitchValue + " Y: " + YawValue);
+    }
+
+    public void updateOrientationAngles2() {
+        SensorManager.getRotationMatrix(mRotationMatrix, null, mAccelerometerReading, mMagnetometerReading);
+        SensorManager.getOrientation(mRotationMatrix, mOrientationAngles);
+
+
+        LastRollValue = RollValue;
+        LastPitchValue = PitchValue;
+        LastYawValue = YawValue;
+
+        RollValue = mOrientationAngles[1] - CalibratedRollValue+RollRotate*6.28;
+        PitchValue = mOrientationAngles[2] - CalibratedPitchValue+PitchRotate*6.28;
+        YawValue = mOrientationAngles[0] - CalibratedYawValue+YawlRotate*6.28;
+
+        if(RollValue - LastRollValue < -3.14)
+            ++RollRotate;
+        else if(RollValue - LastRollValue > 3.14)
+            --RollRotate;
+
+        if(PitchValue - LastPitchValue < -3.14)
+            ++PitchRotate;
+        else if(PitchValue - LastPitchValue > 3.14)
+            --PitchRotate;
+
+        if(YawValue - LastYawValue < -3.14)
+            ++YawlRotate;
+        else if(YawValue - LastYawValue > 3.14)
+            --YawlRotate;
+
+        RollValue = mOrientationAngles[1] - CalibratedRollValue+RollRotate*6.28;
+        PitchValue = mOrientationAngles[2] - CalibratedPitchValue+PitchRotate*6.28;
+        YawValue = mOrientationAngles[0] - CalibratedYawValue+YawlRotate*6.28;
 
         //textViewOrientation.setText("R: " +((int) (Math.toDegrees(mOrientationAngles[1] +  Math.PI))) + "\n" + "P: " +((int) (Math.toDegrees(mOrientationAngles[2] +  Math.PI))) + "\n" + "Y: " +((int) (Math.toDegrees(mOrientationAngles[0] +  Math.PI))));
         textViewOrientation.setText("R: " + RollValue + " P: " + PitchValue + " Y: " + YawValue);
