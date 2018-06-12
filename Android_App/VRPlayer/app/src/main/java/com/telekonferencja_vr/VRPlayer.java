@@ -2,7 +2,9 @@ package com.telekonferencja_vr;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -26,6 +28,8 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
     private boolean is_playing_desired;   // Whether the user asked to go to PLAYING
 
+    private PowerManager.WakeLock wake_lock;
+
 
     // Called when the activity is first created.
     @Override
@@ -44,21 +48,9 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
         setContentView(R.layout.main);
 
-        ImageButton play = (ImageButton) this.findViewById(R.id.button_play);
-        play.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                is_playing_desired = true;
-                nativePlay();
-            }
-        });
-
-        ImageButton pause = (ImageButton) this.findViewById(R.id.button_stop);
-        pause.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                is_playing_desired = false;
-                nativePause();
-            }
-        });
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        wake_lock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "VRPlayer");
+        wake_lock.setReferenceCounted(false);
 
         SurfaceView sv = (SurfaceView) this.findViewById(R.id.surface_video);
         SurfaceHolder sh = sv.getHolder();
@@ -74,11 +66,12 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
             Log.i ("GStreamer", "Activity created. There is no saved state, playing: false");
         }
 
-        // Start with disabled buttons, until native code is initialized
-        this.findViewById(R.id.button_play).setEnabled(false);
-        this.findViewById(R.id.button_stop).setEnabled(false);
 
         nativeInit();
+
+        nativePlay();
+        is_playing_desired = true;
+
     }
 
     protected void onSaveInstanceState (Bundle outState) {
@@ -92,14 +85,7 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     }
 
     // Called from native code. This sets the content of the TextView from the UI thread.
-    private void setMessage(final String message) {
-        final TextView tv = (TextView) this.findViewById(R.id.textview_message);
-        runOnUiThread (new Runnable() {
-            public void run() {
-                tv.setText(message);
-            }
-        });
-    }
+    private void setMessage(final String message) { }
 
     // Called from native code. Native code calls this once it has created its pipeline and
     // the main loop is running, so it is ready to accept commands.
@@ -114,12 +100,6 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
 
         // Re-enable buttons, now that GStreamer is initialized
         final Activity activity = this;
-        runOnUiThread(new Runnable() {
-            public void run() {
-                activity.findViewById(R.id.button_play).setEnabled(true);
-                activity.findViewById(R.id.button_stop).setEnabled(true);
-            }
-        });
     }
 
     static {
@@ -142,6 +122,33 @@ public class VRPlayer extends Activity implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d("GStreamer", "Surface destroyed");
         nativeSurfaceFinalize ();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            hideSystemUI();
+        }
+    }
+
+    private void hideSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
+    }
+
+    private void showSystemUI() {
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
 }
